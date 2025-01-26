@@ -1,4 +1,4 @@
-package com.github.aetherwisp.jakartaee.tutorials.restfulwebservice;
+package com.github.adt.startone.jakartaee.tutorials.restfulwebservice;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

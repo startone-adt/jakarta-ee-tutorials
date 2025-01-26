@@ -1,4 +1,4 @@
-package com.github.aetherwisp.jakartaee.tutorials.servletapplication;
+package com.github.adt.startone.jakartaee.tutorials.servletapplication;
 
 import java.io.IOException;
 
