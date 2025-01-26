@@ -6,7 +6,7 @@
     <!-- =============== -->
     <!-- PROJECT SECTION -->
     <!-- =============== -->
-    <groupId>com.github.aetherwisp</groupId>
+    <groupId>com.github.adt.startone</groupId>
     <artifactId>jakarta-ee-tutorials</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
