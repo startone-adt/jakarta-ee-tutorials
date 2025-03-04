@@ -11,7 +11,7 @@
         <artifactId>jakarta-ee-tutorials</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>servlet-application</artifactId>
+    <artifactId>jakarta-persistence</artifactId>
     <packaging>war</packaging>
 
     <!-- ==================== -->
