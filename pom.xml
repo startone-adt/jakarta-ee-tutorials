@@ -16,10 +16,16 @@
     <!-- PROPERTIES SECTION -->
     <!-- ================== -->
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler-plugin.version>3.13.0</maven.compiler-plugin.version>
+        <maven.war-plugin.version>3.4.0</maven.war-plugin.version>
+        <maven.wildfly-plugin.version>4.2.2.Final</maven.wildfly-plugin.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.report.sourceEncoding>UTF-8</project.report.sourceEncoding>
+
+        <jakartaee-api.version>10.0.0</jakartaee-api.version>
+        <wildfly.version>31.0.1.Final</wildfly.version>
     </properties>
 
     <!-- ==================== -->
@@ -30,7 +36,7 @@
             <dependency>
                 <groupId>jakarta.platform</groupId>
                 <artifactId>jakarta.jakartaee-web-api</artifactId>
-                <version>10.0.0</version>
+                <version>${jakartaee-api.version}</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
@@ -46,23 +52,23 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
+                    <version>${maven.compiler-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>${maven.war-plugin.version}</version>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
                 </plugin>
 
-                <!-- Execute 'mvn clean package wildfly:dev' to run the application. -->
+                <!-- 'mvn clean package wildfly:dev' でアプリケーションを実行 -->
                 <plugin>
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
-                    <version>4.2.2.Final</version>
+                    <version>${maven.wildfly-plugin.version}</version>
                     <configuration>
-                        <version>31.0.1.Final</version><!-- 使用する WildFly のバージョン。省略時は最新の安定バージョンが自動選択される -->
+                        <version>${wildfly.version}</version><!-- 使用する WildFly のバージョン。省略時は最新の安定バージョンが自動選択される -->
                         <server-config>standalone-full.xml</server-config><!-- 使用する WildFly サーバ構成のパス -->
                     </configuration>
                 </plugin>
