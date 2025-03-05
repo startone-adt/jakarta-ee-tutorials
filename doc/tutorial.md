@@ -722,7 +722,156 @@ curl -X DELETE http://localhost:8080/jakartaee-hello-world/rest/coffees/1 ^
      -H `Content-Type: application/json`
 ```
 
+<div style="page-break-before:always"></div>
 
+## ２－４．Jakarta Faces
+&emsp;[Jakarta Faces](https://jakarta.ee/specifications/faces/4.0/jakarta-faces-4.0.html) は、Java Web アプリケーションのユーザインターフェイスの作成を簡素化するフレームワークです。MVC (モデル、ビュー、コントローラ) アーキテクチャに準拠しており、ビューは UI コンポーネントを表し、アプリケーション ロジックはコントローラーとモデルレイヤーに存在します。
 
+### Faces の有効化
+&emsp;Faces サーブレットは、JSF リクエストを処理するためのエントリポイントとして機能します。アプリケーション内で使用されるクラスに @FacesConfig アノテーションを追加すると、Jakarta Faces とその CDI 固有の機能がアクティブ化されます。
 
+<div style="page-break-before:always"></div>
 
+### Faces サーブレット
+&emsp;構成には web.xml 記述子を使用することもできます。web.xml 内の `servlet` 要素を見つけて、次のコードを追加します。
+```
+<servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+</servlet-mapping>
+```
+&emsp;この構成は、JSF ビューでよく使用される `.xhtml` 拡張子で終わるリクエストを処理するようにサーブレットに指示します。ビューの命名規則に基づいてパターンを調整できます。
+
+#### 拡張子なしのマッピング
+&emsp;JSF 4.0 では拡張子なしのマッピングが導入され、`.xhtml` 拡張子のないビューにアクセスできるようになりました。これを有効にするには、`web.xml` ファイルに次のコンテキストパラメータを追加します。
+```
+<context-param>
+    <param-name>jakarta.faces.AUTOMATIC_EXTENSIONLESS_MAPPING</param-name>
+    <param-value>true</param-value>
+</context-param>
+```
+
+<div style="page-break-before:always"></div>
+
+### beans.xml ファイルの追加
+&emsp;`beans.xml` ファイルを作成し、そのファイルを `src/main/webapp/WEB-INF` ディレクトリ内に配置します。
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd"
+       bean-discovery-mode="annotated"
+       version="4.0">
+</beans>
+```
+
+<div style="page-break-before:always"></div>
+
+### Facelets
+&emsp;`Facelets` は、Web ページの構造とレイアウトを定義するために Jakarta Faces で使用されるテンプレート言語です。
+&emsp;`Facelets` テンプレートは通常、`.xhtml` 拡張子を持ち、XHTML マークアップと Jakarta Faces コンポーネント タグおよび式の組み合わせで構成されます。これらのテンプレートには、静的コンテンツだけでなく、Jakarta Faces コンポーネントとマネージド Bean によって生成された動的コンテンツも含めることができます。
+
+#### Facelets 標準タグライブラリ
+&emsp;以下の表は、Faces 4.0 の Faceletsでサポートされている標準ライブラリです。
+|Prefix|URN|Examples|
+|---|---|---|
+|xmlns:h|jakarta.faces.html|h:head, h:inputText|
+|xmlns:f|jakarta.faces.core|f:facet, f:actionListener|
+|xmlns:faces|jakarta.faces|faces:id, faces:value|
+|xmlns:fn|jakarta.tags.function|fn:toLowerCase, fn:contains|
+|xmlns:ui|jakarta.faces.facelets|ui:component, ui:include|
+|xmlns:c|jakarta.tags.core|c:forEach, c:if|
+|xmlns:pt|jakarta.faces.passthrough|pt:type, pt:placeholder|
+|xmlns:cc|jakarta.faces.composite||
+
+<div style="page-break-before:always"></div>
+
+### ビューの作成
+&emsp;簡単な Faces ページを作成します。次の内容を含む index.xhtml という名前の新しい XHTML ファイルを src/main/webapp ディレクトリに作成します。
+```
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html">
+    <f:view>
+        <h:head>
+            <title>Facelets Example</title>
+        </h:head>
+        <h:body>
+            <h1>Welcome to Jakarta Faces!</h1>
+            <h:form>
+                <h:inputText value="#{userBean.username}" />
+                <h:commandButton value="Submit" action="#{userBean.submit}" />
+            </h:form>
+            <h:outputText value="Welcome, #{userBean.username}" rendered="#{userBean.submitted}" />
+        </h:body>
+    </f:view>
+</html>
+```
+&emsp;単純な XHTML ドキュメント構造を定義します。
+&emsp;フォーム要素を作成するために、Jakarta Faces コンポーネント タグ (例: `h:form`、`h:inputText`、`h:commandButton`) を含めます。
+&emsp;コンポーネントを管理対象 Bean のプロパティとメソッドにバインドするために、EL (式言語) 式 (例: `#{userBean.username}`、`#{userBean.submit}`、`#{userBean.submitted}`) を使用します。
+&emsp;`userBean` は、ユーザー入力の処理とフォーム送信の処理を担当する CDI Bean です。
+
+<div style="page-break-before:always"></div>
+
+### バッキング Bean の作成
+&emsp;作成したビューに対応する、Jakarta Faces のバッキング Bean (CDI Bean) を作成します。
+```
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+
+@Named
+@RequestScoped
+public class UserBean {
+    private String username;
+    private boolean submitted;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(boolean submitted) {
+        this.submitted = submitted;
+    }
+
+    public String submit() {
+        // ユーザ入力を処理したり、必要なアクションを実行します
+        this.submitted = true;
+        return null; // 同じページへ遷移し画面を更新します
+    }
+}
+```
+&emsp;`@Named` アノテーションは、このクラスを Jakarta Faces フレームワークによって管理される CDI Bean としてマークします。
+&emsp;`@RequestScoped` アノテーションは、クライアントがサーバに対して行う HTTP リクエストごとに、管理対象 Bean の新しいインスタンスが作成されることを指定します。
+&emsp;`username` プロパティは、ユーザー入力フィールドに入力した値を表します。
+&emsp;`submited` プロパティは、フォームが送信されたかどうかを示します。
+&emsp;`submit()` メソッドは、フォームが送信されると呼び出されます。このメソッドに必要なアクションを実装します。
+
+<div style="page-break-before:always"></div>
+
+### 動作確認
+&emsp;Maven を使用して、次のコマンドを実行してアプリケーションをビルドして実行します。
+```
+mvn clean package wildfly:run
+```
+&emsp;WildFly が正常に起動した場合、サービスが実行されているので下記の URL にアクセスするとレスポンスが返されます。
+```
+http://localhost:8080/jakarta-faces/index.xhtml
+```

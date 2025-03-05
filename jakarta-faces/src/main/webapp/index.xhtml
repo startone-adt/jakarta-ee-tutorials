@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html">
+    <f:view>
+        <h:head>
+            <title>Facelets Example</title>
+        </h:head>
+        <h:body>
+            <h1>Welcome to Jakarta Faces!</h1>
+            <h:form>
+                <h:inputText value="#{userBean.username}" />
+                <h:commandButton value="Submit" action="#{userBean.submit}" />
+            </h:form>
+            <h:outputText value="Welcome, #{userBean.username}" rendered="#{userBean.submitted}" />
+        </h:body>
+    </f:view>
+</html>
